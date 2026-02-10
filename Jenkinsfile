@@ -20,11 +20,6 @@ pipeline {
                 checkout scm
             }
         }
-        stage('Assign permission to Jenkins User'){
-            steps {
-                sh 'sudo usermod -aG docker $USER'
-            }
-        }
 
         stage('Create .env File') {
             steps {
