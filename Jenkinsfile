@@ -52,7 +52,7 @@ EOF
 
     post {
         success {
-            echo "🚀 Django app deployed successfully"
+            echo "🚀 Django app deployed successfully.."
         }
         failure {
             echo "❌ Deployment failed"
