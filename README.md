@@ -1,5 +1,3 @@
----
-
 ## 1️⃣ What Recruiters Actually Look For (Quick Reality Check)
 
 Recruiters don’t care about every Django model. They care about:
