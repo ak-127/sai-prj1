@@ -73,7 +73,8 @@ echo ""
 echo "👤 [10/10] Adding $USER and jenkins user to docker group..."
 sudo usermod -aG docker $USER && sudo usermod -aG docker jenkins 
 newgrp docker
-echo "ℹ️  You may need to log out and log back in for group changes to apply."
+sudo systemctl restart jenkins && sudo systemctl restart docker 
+echo "ℹ️  You may need to log out and log back in for group changes to apply. And restart the jenkins and docker service"
 
 echo ""
 echo "======================================"
