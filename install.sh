@@ -71,7 +71,7 @@ echo "✅ Jenkins installed and started."
 
 echo ""
 echo "👤 [10/10] Adding $USER and jenkin user to docker group..."
-sudo usermod -aG docker $USER
+sudo usermod -aG docker $USER && sudo usermod -aG docker jenkin 
 newgrp docker
 echo "ℹ️  You may need to log out and log back in for group changes to apply."
 
