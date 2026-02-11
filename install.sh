@@ -49,18 +49,12 @@ sudo systemctl start docker
 echo "✅ Docker service started."
 
 echo ""
-echo "👤 [8/10] Adding user to docker group..."
-sudo usermod -aG docker $USER
-newgrp docker
-echo "ℹ️  You may need to log out and log back in for group changes to apply."
-
-echo ""
-echo "☕ [9/10] Installing Java (required for Jenkins)..."
+echo "☕ [8/10] Installing Java (required for Jenkins)..."
 sudo apt install -y fontconfig openjdk-21-jre
 echo "✅ Java installed."
 
 echo ""
-echo "🔑 [10/10] Installing Jenkins..."
+echo "🔑 [9/10] Installing Jenkins..."
 sudo mkdir -p /etc/apt/keyrings
 sudo wget -O /etc/apt/keyrings/jenkins-keyring.asc \
   https://pkg.jenkins.io/debian-stable/jenkins.io-2026.key
@@ -74,6 +68,12 @@ sudo apt install -y jenkins
 sudo systemctl enable jenkins
 sudo systemctl start jenkins
 echo "✅ Jenkins installed and started."
+
+echo ""
+echo "👤 [10/10] Adding $USER and jenkin user to docker group..."
+sudo usermod -aG docker $USER
+newgrp docker
+echo "ℹ️  You may need to log out and log back in for group changes to apply."
 
 echo ""
 echo "======================================"
