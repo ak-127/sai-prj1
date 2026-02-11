@@ -51,6 +51,7 @@ echo "✅ Docker service started."
 echo ""
 echo "👤 [8/10] Adding user to docker group..."
 sudo usermod -aG docker $USER
+newgrp docker
 echo "ℹ️  You may need to log out and log back in for group changes to apply."
 
 echo ""
