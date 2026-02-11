@@ -25,17 +25,17 @@ pipeline {
             steps {
                 sh '''
                 cat <<EOF > .env
-SECRET_KEY=${SECRET_KEY}
-DEBUG=${DEBUG}
+                    SECRET_KEY=${SECRET_KEY}
+                    DEBUG=${DEBUG}
 
-POSTGRES_DB=${POSTGRES_DB}
-POSTGRES_USER=${POSTGRES_USER}
-POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+                    POSTGRES_DB=${POSTGRES_DB}
+                    POSTGRES_USER=${POSTGRES_USER}
+                    POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
 
-DJANGO_SUPERUSER_USERNAME=${DJANGO_SUPERUSER_USERNAME}
-DJANGO_SUPERUSER_EMAIL=${DJANGO_SUPERUSER_EMAIL}
-DJANGO_SUPERUSER_PASSWORD=${DJANGO_SUPERUSER_PASSWORD}
-EOF
+                    DJANGO_SUPERUSER_USERNAME=${DJANGO_SUPERUSER_USERNAME}
+                    DJANGO_SUPERUSER_EMAIL=${DJANGO_SUPERUSER_EMAIL}
+                    DJANGO_SUPERUSER_PASSWORD=${DJANGO_SUPERUSER_PASSWORD}
+                    EOF
                 '''
             }
         }
@@ -43,7 +43,7 @@ EOF
         stage('Docker Compose Build & Deploy') {
             steps {
                 sh '''
-                docker-compose down
+                docker-compose down -v
                 docker-compose up -d --build
                 '''
             }
