@@ -1,4 +1,4 @@
-## 1️⃣ What Recruiters Actually Look For (Quick Reality Check)
+<!-- ## 1️⃣ What Recruiters Actually Look For (Quick Reality Check)
 
 Recruiters don’t care about every Django model. They care about:
 
@@ -303,4 +303,18 @@ http://localhost:8000
     │ Port 80     │
     └─────────────┘
 ```
-# 🚀 Deployment
+# 🚀 Deployment -->
+
+
+# 📚 Project Overview
+
+Welcome to the project! Below you can see the core documentation side-by-side:
+
+| 📘 README.md | 🛠️ INSTALLATION.md |
+|--------------|---------------------|
+| <!-- README CONTENT STARTS --> | <!-- INSTALLATION CONTENT STARTS --> |
+| ```markdown
+read me content
+``` | ```markdown
+installation content
+``` |
