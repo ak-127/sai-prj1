@@ -1,39 +1,3 @@
-## 1️⃣ What Recruiters Actually Look For (Quick Reality Check)
-
-Recruiters don’t care about every Django model. They care about:
-
-* **Infrastructure & automation**
-* **CI/CD maturity**
-* **Cloud + Docker understanding**
-* **Production-style thinking**
-
-Your README should answer these in under **2 minutes of reading**.
-
----
-
-## 2️⃣ Recommended README Structure
-
-### ✅ README Sections (in this order)
-
-1. Project Overview
-2. Architecture Diagram
-3. Tech Stack
-4. CI/CD Pipeline (VERY IMPORTANT)
-5. Deployment Workflow
-6. Docker & Containerization
-7. AWS Infrastructure
-8. Security & Best Practices
-9. How to Run Locally
-10. Future Improvements
-
----
-
-## 3️⃣ Impact-Focused README Template (DevOps-Ready)
-
-You can copy this **as-is** 👇
-
----
-
 # 🚀 Django DevOps Project – CI/CD Pipeline on AWS
 
 ## 📌 Project Overview
