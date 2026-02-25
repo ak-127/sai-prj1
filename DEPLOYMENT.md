@@ -26,7 +26,7 @@ This guide explains how to:
   * ⚠️ Keep the private key (`.pem`) secure
 
 
-![EC2 Launch](/doc/img/1-ec2-launch.png)
+![EC2 Launch](/docs/img/1-ec2-launch.png)
 ---
 
 ## Step 2: Create Security Group
