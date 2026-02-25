@@ -80,7 +80,7 @@ Replace `0.0.0.0` with your instance public IP.
 
 ## Get Initial Admin Password
 
-![Get Initial Admin Password](/doc/img/2-jen-inst-1.png)
+![Get Initial Admin Password](/docs/img/2-jen-inst-1.png)
 
 ```bash
 sudo cat /var/lib/jenkins/secrets/initialAdminPassword
@@ -93,12 +93,12 @@ Copy the password and paste it into the Jenkins setup page.
 
 Click **"Install Suggested Plugins"**
 
-![Install Suggested Plugins](/doc/img/3-jen-inst-2.png)
+![Install Suggested Plugins](/docs/img/3-jen-inst-2.png)
 ---
 
 ## Create First Admin User
 
-![Install Suggested Plugins](/doc/img/4-jen-inst-3.png)
+![Install Suggested Plugins](/docs/img/4-jen-inst-3.png)
 
 * Fill in the details
 * Click **Save and Continue**
@@ -107,7 +107,7 @@ Click **"Install Suggested Plugins"**
 
 ## Instance Configuration
 
-![Install Suggested Plugins](/doc/img/5-jen-inst-4.png)
+![Install Suggested Plugins](/docs/img/5-jen-inst-4.png)
 
 Keep the default configuration and click:
 
@@ -121,7 +121,7 @@ Jenkins installation is now complete.
 
 ## Step 1: Create GitHub Personal Access Token
 
-![GitHub PAT](/doc/img/6-gihub-pat.png)
+![GitHub PAT](/docs/img/6-gihub-pat.png)
 
 Go to:
 
@@ -143,7 +143,7 @@ GitHub → Settings → Developer Settings → Personal Access Tokens
 
 ## Step 2: Add GitHub Token to Jenkins
 
-![CONFIG JEN GH TOKEN](/doc/img/7-jen-gh-pat.png)
+![CONFIG JEN GH TOKEN](/docs/img/7-jen-gh-pat.png)
 
 Go to:
 
@@ -166,7 +166,7 @@ Save.
 
 ## Step 3: Configure GitHub Server in Jenkins
 
-![CONFIG JEN](/doc/img/8-jen-sys.png)
+![CONFIG JEN](/docs/img/8-jen-sys.png)
 Go to:
 
 ```
@@ -192,7 +192,7 @@ Click **Save**.
 
 # 6️⃣ Create GitHub Webhook
 
-![GH WEB HOOK](/doc/img/9-gh-whook.png)
+![GH WEB HOOK](/docs/img/9-gh-whook.png)
 
 Go to your GitHub repository:
 
@@ -217,7 +217,7 @@ Save.
 
 # 7️⃣ Create Jenkins Pipeline Job
 
-![PIPE LIEN JOB](/doc/img/10-jen-pipeline.png)
+![PIPE LIEN JOB](/docs/img/10-jen-pipeline.png)
 
 ## Step 1: Create New Job
 
@@ -230,7 +230,7 @@ Save.
 
 ## Step 2: Configure Pipeline
 
-![CONFIG PIPELINE](/doc/img/11-jen-pepe-config.png)
+![CONFIG PIPELINE](/docs/img/11-jen-pepe-config.png)
 
 ### Triggers
 
@@ -258,7 +258,7 @@ Click **Save**
 
 # 8️⃣ Configure Environment Variables (Credentials)
 
-![VARIABLE](/doc/img/12-jen-env.png)
+![VARIABLE](/docs/img/12-jen-env.png)
 
 Go to:
 
@@ -296,7 +296,7 @@ Refer to `requirements.txt` in the codebase for correct dependency versions.
 
 # 9️⃣ Deploy Application
 
-![DEPLOY](/doc/img/13-jen-con-log.png)
+![DEPLOY](/docs/img/13-jen-con-log.png)
 
 Now push your code to GitHub.
 
@@ -323,7 +323,7 @@ Jenkins → Pipeline → Console Output
 http://<PUBLIC_IP>/
 ```
 
-![WEBSITE](/doc/img/14-website.png)
+![WEBSITE](/docs/img/14-website.png)
 
 ---
 
@@ -332,13 +332,13 @@ http://<PUBLIC_IP>/
 ```
 http://<PUBLIC_IP>/login/
 ```
-![LOGIN](/doc/img/16-login.png)  
+![LOGIN](/docs/img/16-login.png)  
 
 
 ```
 http://<PUBLIC_IP>/login/
 ```
-![DASHBORD](/doc/img/15-dashboard.png)  
+![DASHBORD](/docs/img/15-dashboard.png)  
 
 ### Django Admin Panel
 
@@ -346,9 +346,9 @@ http://<PUBLIC_IP>/login/
 ```
 http://<PUBLIC_IP>/admin/
 ```
-![DJ ADMIN login](/doc/img/17-admin-login.png)  
+![DJ ADMIN login](/docs/img/17-admin-login.png)  
 
-![DJ ADMIN Dashboard](/doc/img/19-admin-dashboard.png)
+![DJ ADMIN Dashboard](/docs/img/19-admin-dashboard.png)
 
 
 Login using:
