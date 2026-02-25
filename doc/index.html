@@ -1,0 +1,1243 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>sai-prj1 — Django DevOps CI/CD on AWS | Akash Kamble</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,300;0,400;0,600;0,700;0,800;1,400&family=Syne:wght@400;600;700;800&family=Inter:wght@300;400;500&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+
+:root{
+  --bg:#050a0f;
+  --bg2:#080f18;
+  --bg3:#0c1520;
+  --card:#0e1a28;
+  --card2:#112030;
+  --border:rgba(0,200,255,0.1);
+  --border2:rgba(0,200,255,0.2);
+  --cyan:#00c8ff;
+  --cyan2:#00e5ff;
+  --green:#00ff9d;
+  --amber:#ffb020;
+  --red:#ff4466;
+  --purple:#a855f7;
+  --text:#b8d0e8;
+  --text2:#6a90b0;
+  --text3:#3a5570;
+  --white:#e8f4ff;
+  --font-head:'Syne',sans-serif;
+  --font-mono:'JetBrains Mono',monospace;
+  --font-body:'Inter',sans-serif;
+}
+
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);font-family:var(--font-body);overflow-x:hidden;cursor:none}
+
+/* CURSOR */
+#cur{width:8px;height:8px;background:var(--cyan);border-radius:50%;position:fixed;pointer-events:none;z-index:9999;mix-blend-mode:screen;transition:transform .1s}
+#cur2{width:32px;height:32px;border:1px solid rgba(0,200,255,.4);border-radius:50%;position:fixed;pointer-events:none;z-index:9998;transition:transform .06s ease,width .3s,height .3s}
+#cur2.h{width:52px;height:52px;border-color:var(--cyan)}
+
+/* SCROLLBAR */
+::-webkit-scrollbar{width:3px}
+::-webkit-scrollbar-thumb{background:var(--cyan2);border-radius:2px}
+
+/* GRID BG */
+.gbg{position:fixed;inset:0;pointer-events:none;z-index:0;
+  background-image:linear-gradient(rgba(0,200,255,.025) 1px,transparent 1px),linear-gradient(90deg,rgba(0,200,255,.025) 1px,transparent 1px);
+  background-size:50px 50px}
+.gbg::after{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 60% 50% at 50% 0%,rgba(0,80,160,.18) 0%,transparent 70%)}
+
+/* NAV */
+nav{position:fixed;top:0;left:0;right:0;z-index:500;padding:0 60px;height:64px;display:flex;align-items:center;justify-content:space-between;background:rgba(5,10,15,.85);border-bottom:1px solid var(--border);backdrop-filter:blur(20px)}
+.nav-logo{font-family:var(--font-mono);font-size:13px;color:var(--cyan);font-weight:600;letter-spacing:1px;text-decoration:none}
+.nav-logo span{color:var(--text2)}
+.nav-links{display:flex;gap:6px;list-style:none}
+.nav-links a{font-family:var(--font-mono);font-size:11px;color:var(--text2);text-decoration:none;padding:6px 14px;border-radius:6px;border:1px solid transparent;transition:.25s;letter-spacing:.5px;text-transform:uppercase}
+.nav-links a:hover{color:var(--cyan);border-color:var(--border);background:rgba(0,200,255,.05)}
+.nav-badge{background:rgba(0,255,157,.08);border:1px solid rgba(0,255,157,.25);color:var(--green);font-family:var(--font-mono);font-size:10px;padding:4px 12px;border-radius:20px;display:flex;align-items:center;gap:6px}
+.nav-badge::before{content:'';width:6px;height:6px;background:var(--green);border-radius:50%;box-shadow:0 0 6px var(--green);animation:p 2s infinite}
+@keyframes p{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.5;transform:scale(.8)}}
+
+/* SECTIONS */
+section{position:relative;z-index:1;padding:100px 80px}
+section:first-of-type{padding-top:140px}
+
+.sec-label{font-family:var(--font-mono);font-size:11px;color:var(--cyan);letter-spacing:3px;text-transform:uppercase;margin-bottom:14px;opacity:.7}
+.sec-title{font-family:var(--font-head);font-size:clamp(28px,4vw,48px);font-weight:800;color:var(--white);line-height:1.1;letter-spacing:-1px;margin-bottom:16px}
+.sec-title span{background:linear-gradient(135deg,var(--cyan),#0060ff);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.sec-desc{font-size:15px;color:var(--text2);line-height:1.8;max-width:700px}
+
+/* REVEAL */
+.reveal{opacity:0;transform:translateY(28px);transition:opacity .7s ease,transform .7s ease}
+.reveal.on{opacity:1;transform:translateY(0)}
+
+/* ═══ HERO ═══ */
+#hero{min-height:100vh;display:flex;flex-direction:column;justify-content:center;padding:140px 80px 80px}
+.hero-top{display:flex;align-items:center;gap:16px;margin-bottom:28px}
+.repo-badge{background:var(--card);border:1px solid var(--border2);border-radius:8px;padding:7px 16px;font-family:var(--font-mono);font-size:12px;color:var(--text2);display:flex;align-items:center;gap:8px}
+.repo-badge .dot{width:6px;height:6px;border-radius:50%;background:var(--green);box-shadow:0 0 6px var(--green)}
+.hero-h{font-family:var(--font-head);font-size:clamp(44px,6vw,80px);font-weight:800;color:var(--white);line-height:1.02;letter-spacing:-2.5px;margin-bottom:12px}
+.hero-h span{background:linear-gradient(120deg,var(--cyan2),#2060ff 60%,var(--purple));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.hero-sub{font-family:var(--font-mono);font-size:15px;color:var(--text2);margin-bottom:44px;max-width:620px;line-height:1.6}
+
+.hero-pills{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:48px}
+.pill{background:var(--card2);border:1px solid var(--border);border-radius:20px;padding:7px 16px;font-family:var(--font-mono);font-size:11.5px;color:var(--text2);transition:.25s}
+.pill:hover{border-color:var(--border2);color:var(--cyan)}
+.pill.green{border-color:rgba(0,255,157,.2);color:var(--green)}
+.pill.amber{border-color:rgba(255,176,32,.2);color:var(--amber)}
+.pill.purple{border-color:rgba(168,85,247,.2);color:var(--purple)}
+
+.hero-btns{display:flex;gap:14px;flex-wrap:wrap;margin-bottom:60px}
+.btn{display:inline-flex;align-items:center;gap:10px;padding:13px 26px;border-radius:10px;font-family:var(--font-head);font-size:13px;font-weight:700;letter-spacing:1px;text-transform:uppercase;text-decoration:none;transition:.3s;cursor:none;border:none}
+.btn-p{background:linear-gradient(135deg,var(--cyan),#0060ff);color:#050a0f;box-shadow:0 0 30px rgba(0,200,255,.25)}
+.btn-p:hover{transform:translateY(-2px);box-shadow:0 0 50px rgba(0,200,255,.45)}
+.btn-g{background:transparent;border:1px solid var(--border2);color:var(--text)}
+.btn-g:hover{border-color:var(--cyan);color:var(--cyan);background:rgba(0,200,255,.06)}
+
+.hero-stats{display:flex;gap:0;border:1px solid var(--border);border-radius:14px;overflow:hidden;max-width:fit-content}
+.hstat{padding:20px 36px;border-right:1px solid var(--border);text-align:center}
+.hstat:last-child{border-right:none}
+.hstat-n{font-family:var(--font-head);font-size:32px;font-weight:800;color:var(--white);line-height:1}
+.hstat-n span{color:var(--cyan)}
+.hstat-l{font-family:var(--font-mono);font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:1.5px;margin-top:4px}
+
+/* ═══ PIPELINE ANIMATION ═══ */
+#pipeline{background:var(--bg2);border-top:1px solid var(--border);border-bottom:1px solid var(--border)}
+.pipeline-wrap{overflow-x:auto;padding-bottom:20px}
+.pipeline-flow{display:flex;align-items:center;gap:0;min-width:900px;padding:40px 0}
+.pnode{display:flex;flex-direction:column;align-items:center;gap:12px;flex:1}
+.pnode-box{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:20px 16px;text-align:center;min-width:120px;transition:.3s;position:relative;cursor:default}
+.pnode-box:hover{border-color:var(--border2);transform:translateY(-4px);box-shadow:0 16px 48px rgba(0,0,0,.5)}
+.pnode-box.active{border-color:var(--cyan);box-shadow:0 0 20px rgba(0,200,255,.15)}
+.pnode-icon{font-size:28px;margin-bottom:8px}
+.pnode-title{font-family:var(--font-head);font-size:13px;font-weight:700;color:var(--white)}
+.pnode-sub{font-family:var(--font-mono);font-size:10px;color:var(--text3);margin-top:3px}
+.pnode-status{position:absolute;top:-6px;right:-6px;width:14px;height:14px;border-radius:50%;background:var(--green);box-shadow:0 0 8px var(--green);border:2px solid var(--bg2);animation:p 2s infinite}
+.parrow{flex:0 0 40px;display:flex;align-items:center;justify-content:center;position:relative}
+.parrow-line{width:100%;height:2px;position:relative;overflow:visible}
+.parrow-line::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:var(--border)}
+.parrow-line::after{content:'';position:absolute;top:0;left:-100%;width:100%;height:2px;background:linear-gradient(90deg,transparent,var(--cyan));animation:flow 2s linear infinite}
+@keyframes flow{0%{left:-100%}100%{left:100%}}
+.parrow-head{position:absolute;right:-2px;top:50%;transform:translateY(-50%);color:var(--cyan);font-size:14px}
+.pstage-label{font-family:var(--font-mono);font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:1px}
+
+/* ═══ ARCHITECTURE ═══ */
+#architecture{background:var(--bg)}
+.arch-container{position:relative;margin-top:60px}
+
+/* SVG Architecture */
+.arch-svg-wrap{background:var(--bg2);border:1px solid var(--border);border-radius:20px;padding:40px;overflow:hidden;position:relative}
+.arch-svg-wrap::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 70% 50% at 50% 50%,rgba(0,80,160,.08) 0%,transparent 70%);pointer-events:none}
+
+svg.arch-svg{width:100%;max-width:900px;margin:0 auto;display:block;font-family:var(--font-mono)}
+
+/* Arch node styles */
+.anode{fill:var(--card2);stroke:rgba(0,200,255,.3);stroke-width:1.5;rx:12;transition:fill .3s}
+.anode:hover{fill:rgba(0,200,255,.08)}
+.anode-title{fill:var(--white);font-size:13px;font-weight:700;font-family:'Syne',sans-serif}
+.anode-sub{fill:var(--text2);font-size:10px}
+.anode-icon{font-size:22px}
+.aline{stroke:rgba(0,200,255,.3);stroke-width:1.5;fill:none;stroke-dasharray:6,4}
+.aline-animated{stroke:var(--cyan);stroke-width:2;fill:none;stroke-dasharray:200;stroke-dashoffset:200;animation:dash 3s ease infinite}
+@keyframes dash{0%{stroke-dashoffset:200;opacity:0}30%{opacity:1}100%{stroke-dashoffset:-200;opacity:0}}
+.alabel{fill:var(--cyan);font-size:9px;letter-spacing:1px;text-transform:uppercase}
+
+/* ═══ DOCKER SECTION ═══ */
+#docker-section{background:var(--bg2);border-top:1px solid var(--border);border-bottom:1px solid var(--border)}
+.docker-grid{display:grid;grid-template-columns:1fr 1fr;gap:40px;margin-top:50px;align-items:start}
+.docker-compose-vis{background:var(--bg);border:1px solid var(--border);border-radius:16px;padding:28px;overflow:hidden}
+.compose-title{font-family:var(--font-mono);font-size:11px;color:var(--text3);text-transform:uppercase;letter-spacing:2px;margin-bottom:20px;display:flex;align-items:center;gap:8px}
+.compose-title::before{content:'';width:8px;height:8px;background:var(--cyan);border-radius:50%;display:block}
+
+.service-block{border:1px solid var(--border);border-radius:12px;padding:18px;margin-bottom:14px;transition:.3s;position:relative;overflow:hidden}
+.service-block::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--cyan)}
+.service-block.db::before{background:var(--amber)}
+.service-block.nginx::before{background:var(--green)}
+.service-block:hover{border-color:var(--border2);background:rgba(0,200,255,.03)}
+.svc-header{display:flex;align-items:center;gap:10px;margin-bottom:12px}
+.svc-icon{font-size:20px}
+.svc-name{font-family:var(--font-head);font-size:14px;font-weight:700;color:var(--white)}
+.svc-tag{font-family:var(--font-mono);font-size:10px;padding:3px 8px;border-radius:4px;background:rgba(0,200,255,.08);border:1px solid var(--border);color:var(--cyan)}
+.svc-props{display:flex;flex-direction:column;gap:5px}
+.svc-prop{font-family:var(--font-mono);font-size:11px;color:var(--text2);display:flex;gap:8px}
+.svc-prop .key{color:var(--text3)}
+
+.compose-network{background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:14px;margin-top:8px}
+.net-title{font-family:var(--font-mono);font-size:10px;color:var(--green);text-transform:uppercase;letter-spacing:1px;margin-bottom:10px}
+.net-services{display:flex;gap:8px;flex-wrap:wrap}
+.net-svc{background:rgba(0,255,157,.05);border:1px solid rgba(0,255,157,.15);border-radius:6px;padding:5px 12px;font-family:var(--font-mono);font-size:11px;color:var(--green)}
+
+/* Code block */
+.code-block{background:var(--bg);border:1px solid var(--border);border-radius:14px;overflow:hidden}
+.code-header{background:rgba(255,255,255,.03);padding:12px 16px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between}
+.code-dots{display:flex;gap:6px}
+.code-dots span{width:10px;height:10px;border-radius:50%}
+.code-dots .r{background:#ff5f57}
+.code-dots .y{background:#febc2e}
+.code-dots .g{background:#28c840}
+.code-filename{font-family:var(--font-mono);font-size:11px;color:var(--text3)}
+.code-body{padding:20px;font-family:var(--font-mono);font-size:12px;line-height:1.8;overflow-x:auto}
+.kw{color:#c792ea}
+.str{color:#c3e88d}
+.cmt{color:#546e7a;font-style:italic}
+.fn{color:#82aaff}
+.num{color:#f78c6c}
+.var{color:var(--cyan2)}
+.op{color:var(--text3)}
+pre{white-space:pre}
+
+/* ═══ JENKINS ═══ */
+#cicd{background:var(--bg)}
+.jenkins-stages{display:grid;grid-template-columns:repeat(5,1fr);gap:0;margin-top:50px;position:relative}
+.jenkins-stages::before{content:'';position:absolute;top:40px;left:10%;right:10%;height:2px;background:var(--border);z-index:0}
+.jenkins-stages::after{content:'';position:absolute;top:40px;left:10%;width:0;height:2px;background:linear-gradient(90deg,var(--cyan),var(--green));z-index:1;animation:progress 4s ease forwards 1s}
+@keyframes progress{to{width:80%}}
+
+.jstage{display:flex;flex-direction:column;align-items:center;gap:14px;position:relative;z-index:2}
+.jstage-num{width:80px;height:80px;border-radius:50%;background:var(--card);border:2px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:28px;transition:.3s;position:relative}
+.jstage:hover .jstage-num{border-color:var(--cyan);box-shadow:0 0 20px rgba(0,200,255,.2);transform:scale(1.08)}
+.jstage-num.done{border-color:var(--green);background:rgba(0,255,157,.06)}
+.jstage-num.done::after{content:'✓';position:absolute;bottom:-4px;right:-4px;width:20px;height:20px;background:var(--green);border-radius:50%;color:var(--bg);font-size:10px;font-weight:700;display:flex;align-items:center;justify-content:center;font-family:var(--font-mono)}
+.jstage-title{font-family:var(--font-head);font-size:13px;font-weight:700;color:var(--white);text-align:center}
+.jstage-desc{font-family:var(--font-mono);font-size:10px;color:var(--text3);text-align:center;line-height:1.5;max-width:130px}
+
+/* Jenkins Benefits */
+.benefits-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-top:50px}
+.benefit-card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:22px 18px;transition:.3s}
+.benefit-card:hover{border-color:var(--border2);transform:translateY(-3px)}
+.benefit-icon{font-size:24px;margin-bottom:10px}
+.benefit-title{font-family:var(--font-head);font-size:14px;font-weight:700;color:var(--white);margin-bottom:6px}
+.benefit-desc{font-family:var(--font-mono);font-size:11px;color:var(--text2);line-height:1.6}
+
+/* ═══ AWS INFRA ═══ */
+#aws{background:var(--bg2);border-top:1px solid var(--border)}
+.aws-grid{display:grid;grid-template-columns:1.2fr 1fr;gap:50px;margin-top:50px;align-items:start}
+
+.ec2-vis{background:var(--bg);border:2px solid rgba(255,176,32,.2);border-radius:16px;padding:28px;position:relative;overflow:hidden}
+.ec2-vis::before{content:'AWS EC2';position:absolute;top:12px;right:16px;font-family:var(--font-mono);font-size:10px;color:var(--amber);letter-spacing:1px;text-transform:uppercase}
+.ec2-label{font-family:var(--font-head);font-size:12px;font-weight:700;color:var(--amber);letter-spacing:1px;text-transform:uppercase;margin-bottom:20px;display:flex;align-items:center;gap:8px}
+.ec2-label::before{content:'☁';font-size:16px}
+
+.container-stack{display:flex;flex-direction:column;gap:10px}
+.ct{border:1px solid var(--border);border-radius:10px;padding:14px 16px;display:flex;align-items:center;gap:12px;transition:.3s;cursor:default}
+.ct:hover{border-color:var(--border2);background:rgba(0,200,255,.04)}
+.ct-icon{font-size:20px;flex-shrink:0}
+.ct-info{}
+.ct-name{font-family:var(--font-head);font-size:13px;font-weight:700;color:var(--white)}
+.ct-port{font-family:var(--font-mono);font-size:10px;color:var(--text3)}
+
+.ec2-net{background:rgba(0,200,255,.03);border:1px solid var(--border);border-radius:10px;padding:14px;margin-top:16px}
+.ec2-net-title{font-family:var(--font-mono);font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:1px;margin-bottom:10px}
+.port-list{display:flex;gap:8px;flex-wrap:wrap}
+.port-badge{background:var(--bg3);border:1px solid var(--border);border-radius:6px;padding:5px 12px;font-family:var(--font-mono);font-size:11px;color:var(--text2)}
+.port-badge.open{border-color:rgba(0,255,157,.2);color:var(--green)}
+
+.infra-details{}
+.infra-item{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:18px;margin-bottom:12px;transition:.3s}
+.infra-item:hover{border-color:var(--border2)}
+.infra-item-head{display:flex;align-items:center;gap:10px;margin-bottom:8px}
+.infra-item-icon{font-size:20px}
+.infra-item-title{font-family:var(--font-head);font-size:14px;font-weight:700;color:var(--white)}
+.infra-item-desc{font-family:var(--font-mono);font-size:11.5px;color:var(--text2);line-height:1.65}
+
+/* ═══ DEPLOY GUIDE ═══ */
+#deploy{background:var(--bg);border-top:1px solid var(--border)}
+.deploy-steps{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;margin-top:50px}
+.dstep{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:26px;transition:.3s;position:relative;overflow:hidden}
+.dstep::after{content:attr(data-num);position:absolute;bottom:-10px;right:10px;font-family:var(--font-head);font-size:80px;font-weight:800;color:rgba(0,200,255,.04);line-height:1;pointer-events:none}
+.dstep:hover{border-color:var(--border2);transform:translateY(-3px);box-shadow:0 20px 50px rgba(0,0,0,.4)}
+.dstep-num{width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,var(--cyan),#0060ff);display:flex;align-items:center;justify-content:center;font-family:var(--font-head);font-size:14px;font-weight:800;color:var(--bg);margin-bottom:16px;flex-shrink:0}
+.dstep-title{font-family:var(--font-head);font-size:16px;font-weight:700;color:var(--white);margin-bottom:12px}
+.dstep-code{background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:12px 14px;font-family:var(--font-mono);font-size:11.5px;color:var(--green);margin-bottom:10px;line-height:1.7}
+.dstep-code .comment{color:var(--text3);font-style:italic}
+.dstep-desc{font-family:var(--font-mono);font-size:11px;color:var(--text2);line-height:1.65}
+
+/* ═══ TECH STACK ═══ */
+#stack{background:var(--bg2);border-top:1px solid var(--border);border-bottom:1px solid var(--border)}
+.stack-table{margin-top:50px;border:1px solid var(--border);border-radius:16px;overflow:hidden}
+.stack-row{display:grid;grid-template-columns:160px 1fr 1fr;gap:0;border-bottom:1px solid var(--border)}
+.stack-row:last-child{border-bottom:none}
+.stack-row.header{background:rgba(0,200,255,.04)}
+.stack-cell{padding:16px 22px;font-family:var(--font-mono);font-size:12.5px;border-right:1px solid var(--border)}
+.stack-cell:last-child{border-right:none}
+.stack-cell.cat{color:var(--text3);text-transform:uppercase;letter-spacing:1px;font-size:11px;display:flex;align-items:center;gap:8px}
+.stack-cell.tech{color:var(--white);font-weight:600}
+.stack-cell.desc{color:var(--text2);font-size:11.5px}
+.stack-cell.header{color:var(--cyan);font-size:11px;text-transform:uppercase;letter-spacing:1.5px;font-weight:600}
+
+/* ═══ SECURITY ═══ */
+#security{background:var(--bg)}
+.security-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:50px}
+.sec-card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:24px;transition:.3s;position:relative}
+.sec-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--cyan),transparent);transform:scaleX(0);transition:.3s;transform-origin:left}
+.sec-card:hover::before{transform:scaleX(1)}
+.sec-card:hover{border-color:var(--border2);transform:translateY(-3px)}
+.sec-icon{font-size:26px;margin-bottom:12px}
+.sec-title{font-family:var(--font-head);font-size:15px;font-weight:700;color:var(--white);margin-bottom:8px}
+.sec-desc{font-family:var(--font-mono);font-size:11px;color:var(--text2);line-height:1.7}
+
+/* ═══ ROADMAP ═══ */
+#roadmap{background:var(--bg2);border-top:1px solid var(--border)}
+.roadmap-list{display:grid;grid-template-columns:repeat(2,1fr);gap:14px;margin-top:50px}
+.rm-item{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:20px;display:flex;align-items:flex-start;gap:14px;transition:.3s}
+.rm-item:hover{border-color:var(--border2)}
+.rm-badge{width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0}
+.rm-badge.planned{background:rgba(0,200,255,.08);border:1px solid var(--border2)}
+.rm-badge.soon{background:rgba(255,176,32,.08);border:1px solid rgba(255,176,32,.2)}
+.rm-badge.future{background:rgba(168,85,247,.08);border:1px solid rgba(168,85,247,.2)}
+.rm-title{font-family:var(--font-head);font-size:14px;font-weight:700;color:var(--white);margin-bottom:4px}
+.rm-desc{font-family:var(--font-mono);font-size:11px;color:var(--text2);line-height:1.5}
+.rm-tag{display:inline-block;font-family:var(--font-mono);font-size:9px;padding:2px 8px;border-radius:4px;text-transform:uppercase;letter-spacing:1px;margin-top:6px}
+.rm-tag.planned{background:rgba(0,200,255,.08);color:var(--cyan)}
+.rm-tag.soon{background:rgba(255,176,32,.08);color:var(--amber)}
+.rm-tag.future{background:rgba(168,85,247,.08);color:var(--purple)}
+
+/* FOOTER */
+footer{padding:40px 80px;border-top:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;font-family:var(--font-mono);font-size:11px;color:var(--text3);position:relative;z-index:1;background:var(--bg)}
+footer span{color:var(--cyan)}
+.footer-links{display:flex;gap:20px}
+.footer-links a{color:var(--text3);text-decoration:none;transition:.2s}
+.footer-links a:hover{color:var(--cyan)}
+
+@media(max-width:1100px){
+  section{padding:80px 40px}
+  #hero{padding:140px 40px 80px}
+  .docker-grid,.aws-grid,.jenkins-stages{grid-template-columns:1fr}
+  .deploy-steps,.security-grid,.benefits-grid{grid-template-columns:repeat(2,1fr)}
+  .roadmap-list{grid-template-columns:1fr}
+  .jenkins-stages::before,.jenkins-stages::after{display:none}
+}
+@media(max-width:700px){
+  section{padding:60px 20px}
+  #hero{padding:120px 20px 60px}
+  nav{padding:0 20px}
+  .nav-links{display:none}
+  .deploy-steps,.security-grid,.benefits-grid{grid-template-columns:1fr}
+  .hero-stats{flex-direction:column;gap:0}
+  footer{padding:24px 20px;flex-direction:column;gap:10px;text-align:center}
+}
+</style>
+</head>
+<body>
+
+<div id="cur"></div>
+<div id="cur2"></div>
+<div class="gbg"></div>
+
+<!-- NAV -->
+<nav>
+  <a href="#hero" class="nav-logo">ak-127<span>/sai-prj1</span></a>
+  <ul class="nav-links">
+    <li><a href="#pipeline">Pipeline</a></li>
+    <li><a href="#architecture">Architecture</a></li>
+    <li><a href="#docker-section">Docker</a></li>
+    <li><a href="#cicd">Jenkins</a></li>
+    <li><a href="#aws">AWS</a></li>
+    <li><a href="#deploy">Deploy</a></li>
+  </ul>
+  <div class="nav-badge">Production Ready</div>
+</nav>
+
+<!-- ═══════ HERO ═══════ -->
+<section id="hero">
+  <div class="reveal">
+    <div class="hero-top">
+      <div class="repo-badge"><span class="dot"></span>ak-127 / sai-prj1</div>
+      <div class="repo-badge" style="border-color:rgba(255,176,32,.2);color:var(--amber)">⭐ DevOps Project</div>
+    </div>
+    <h1 class="hero-h">Django CI/CD<br/><span>Pipeline on AWS</span></h1>
+    <p class="hero-sub">A production-ready DevOps workflow — Dockerized Django app with Jenkins CI/CD, PostgreSQL, Nginx reverse proxy, and automated AWS EC2 deployment. Zero manual deployments.</p>
+
+    <div class="hero-pills">
+      <div class="pill green">🐳 Docker + Compose</div>
+      <div class="pill">🔧 Jenkins CI/CD</div>
+      <div class="pill amber">☁️ AWS EC2</div>
+      <div class="pill">🐍 Django 5.0.6</div>
+      <div class="pill">🗄️ PostgreSQL 15</div>
+      <div class="pill">🌐 Nginx Proxy</div>
+      <div class="pill purple">🔒 Security Best Practices</div>
+    </div>
+
+    <div class="hero-btns">
+      <a href="https://github.com/ak-127/sai-prj1" class="btn btn-p" target="_blank">↗ View on GitHub</a>
+      <a href="#deploy" class="btn btn-g">📖 Deployment Guide</a>
+      <a href="#architecture" class="btn btn-g">🏗 Architecture</a>
+    </div>
+
+    <div class="hero-stats">
+      <div class="hstat"><div class="hstat-n">5</div><div class="hstat-l">Pipeline Stages</div></div>
+      <div class="hstat"><div class="hstat-n">3</div><div class="hstat-l">Containers</div></div>
+      <div class="hstat"><div class="hstat-n">0</div><div class="hstat-l">Manual Deploys</div></div>
+      <div class="hstat"><div class="hstat-n" style="color:var(--green)">✓</div><div class="hstat-l">Production Grade</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════ CI/CD PIPELINE FLOW ═══════ -->
+<section id="pipeline">
+  <div class="sec-label">Automated Workflow</div>
+  <h2 class="sec-title">CI/CD <span>Pipeline Flow</span></h2>
+  <p class="sec-desc">Every git push to <code style="background:var(--card);padding:2px 8px;border-radius:4px;font-family:var(--font-mono);font-size:13px;color:var(--cyan)">main</code> triggers the full automated pipeline — from code checkout to live deployment on AWS EC2.</p>
+
+  <div class="pipeline-wrap reveal">
+    <div class="pipeline-flow">
+
+      <div class="pnode">
+        <div class="pnode-box active">
+          <div class="pnode-status"></div>
+          <div class="pnode-icon">👨‍💻</div>
+          <div class="pnode-title">Developer</div>
+          <div class="pnode-sub">git push main</div>
+        </div>
+        <div class="pstage-label">Trigger</div>
+      </div>
+
+      <div class="parrow">
+        <div class="parrow-line"><div class="parrow-head">›</div></div>
+      </div>
+
+      <div class="pnode">
+        <div class="pnode-box active">
+          <div class="pnode-status"></div>
+          <div class="pnode-icon">🐙</div>
+          <div class="pnode-title">GitHub</div>
+          <div class="pnode-sub">Webhook fired</div>
+        </div>
+        <div class="pstage-label">SCM</div>
+      </div>
+
+      <div class="parrow">
+        <div class="parrow-line" style="animation-delay:.4s"><div class="parrow-head">›</div></div>
+      </div>
+
+      <div class="pnode">
+        <div class="pnode-box active">
+          <div class="pnode-status"></div>
+          <div class="pnode-icon">🔧</div>
+          <div class="pnode-title">Jenkins</div>
+          <div class="pnode-sub">Build + Test</div>
+        </div>
+        <div class="pstage-label">CI Server</div>
+      </div>
+
+      <div class="parrow">
+        <div class="parrow-line" style="animation-delay:.8s"><div class="parrow-head">›</div></div>
+      </div>
+
+      <div class="pnode">
+        <div class="pnode-box active">
+          <div class="pnode-status"></div>
+          <div class="pnode-icon">🐳</div>
+          <div class="pnode-title">Docker</div>
+          <div class="pnode-sub">Image Build</div>
+        </div>
+        <div class="pstage-label">Container</div>
+      </div>
+
+      <div class="parrow">
+        <div class="parrow-line" style="animation-delay:1.2s"><div class="parrow-head">›</div></div>
+      </div>
+
+      <div class="pnode">
+        <div class="pnode-box active">
+          <div class="pnode-status"></div>
+          <div class="pnode-icon">☁️</div>
+          <div class="pnode-title">AWS EC2</div>
+          <div class="pnode-sub">Live Deploy</div>
+        </div>
+        <div class="pstage-label">Production</div>
+      </div>
+
+      <div class="parrow">
+        <div class="parrow-line" style="animation-delay:1.6s"><div class="parrow-head">›</div></div>
+      </div>
+
+      <div class="pnode">
+        <div class="pnode-box active" style="border-color:rgba(0,255,157,.3);box-shadow:0 0 20px rgba(0,255,157,.1)">
+          <div class="pnode-status" style="background:var(--green);box-shadow:0 0 8px var(--green)"></div>
+          <div class="pnode-icon">🌐</div>
+          <div class="pnode-title">Live App</div>
+          <div class="pnode-sub">:80 Online</div>
+        </div>
+        <div class="pstage-label" style="color:var(--green)">Deployed ✓</div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ═══════ ARCHITECTURE ═══════ -->
+<section id="architecture">
+  <div class="sec-label">System Design</div>
+  <h2 class="sec-title">Infrastructure <span>Architecture</span></h2>
+  <p class="sec-desc">Full-stack architecture running inside Docker containers on AWS EC2 — Nginx handles all incoming traffic, routing to the Django/Gunicorn app, backed by PostgreSQL.</p>
+
+  <div class="arch-container reveal">
+    <div class="arch-svg-wrap">
+      <svg class="arch-svg" viewBox="0 0 860 580" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <marker id="arr" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+            <path d="M0,0 L0,6 L8,3 z" fill="rgba(0,200,255,0.5)"/>
+          </marker>
+          <marker id="arr2" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+            <path d="M0,0 L0,6 L8,3 z" fill="rgba(0,255,157,0.5)"/>
+          </marker>
+          <filter id="glow">
+            <feGaussianBlur stdDeviation="3" result="coloredBlur"/>
+            <feMerge><feMergeNode in="coloredBlur"/><feMergeNode in="SourceGraphic"/></feMerge>
+          </filter>
+        </defs>
+
+        <!-- AWS EC2 outer box -->
+        <rect x="180" y="80" width="510" height="460" rx="16" fill="rgba(255,176,32,0.03)" stroke="rgba(255,176,32,0.25)" stroke-width="1.5" stroke-dasharray="8,4"/>
+        <text x="620" y="106" font-family="JetBrains Mono" font-size="11" fill="rgba(255,176,32,0.6)" letter-spacing="1">AWS EC2</text>
+
+        <!-- Docker network box -->
+        <rect x="200" y="130" width="470" height="370" rx="12" fill="rgba(0,200,255,0.02)" stroke="rgba(0,200,255,0.12)" stroke-width="1" stroke-dasharray="5,4"/>
+        <text x="210" y="152" font-family="JetBrains Mono" font-size="10" fill="rgba(0,200,255,0.4)" letter-spacing="1">Docker Network</text>
+
+        <!-- ── Client ── -->
+        <rect x="20" y="230" width="130" height="70" rx="12" fill="#0e1a28" stroke="rgba(0,200,255,0.3)" stroke-width="1.5"/>
+        <text x="85" y="258" font-family="Syne" font-size="13" font-weight="700" fill="#e8f4ff" text-anchor="middle">🌐 Client</text>
+        <text x="85" y="276" font-family="JetBrains Mono" font-size="10" fill="#6a90b0" text-anchor="middle">Browser/HTTP</text>
+        <text x="85" y="292" font-family="JetBrains Mono" font-size="9" fill="rgba(0,200,255,0.5)" text-anchor="middle">Port 80/443</text>
+
+        <!-- arrow client → nginx -->
+        <line x1="150" y1="265" x2="218" y2="265" stroke="rgba(0,200,255,0.4)" stroke-width="1.5" marker-end="url(#arr)"/>
+        <text x="163" y="259" font-family="JetBrains Mono" font-size="9" fill="rgba(0,200,255,0.4)">HTTP</text>
+
+        <!-- ── Nginx ── -->
+        <rect x="220" y="210" width="155" height="110" rx="12" fill="#0e1a28" stroke="rgba(0,255,157,0.4)" stroke-width="1.5"/>
+        <text x="297" y="240" font-family="Syne" font-size="14" font-weight="700" fill="#e8f4ff" text-anchor="middle">🌐 Nginx</text>
+        <text x="297" y="258" font-family="JetBrains Mono" font-size="10" fill="#6a90b0" text-anchor="middle">Reverse Proxy</text>
+        <text x="297" y="274" font-family="JetBrains Mono" font-size="9" fill="rgba(0,255,157,0.5)" text-anchor="middle">SSL · Static · Gzip</text>
+        <text x="297" y="290" font-family="JetBrains Mono" font-size="9" fill="rgba(0,255,157,0.4)" text-anchor="middle">:80, :443</text>
+        <!-- Nginx glow dot -->
+        <circle cx="347" cy="214" r="5" fill="rgba(0,255,157,0.8)" filter="url(#glow)">
+          <animate attributeName="opacity" values="1;0.4;1" dur="2s" repeatCount="indefinite"/>
+        </circle>
+
+        <!-- arrow nginx → web -->
+        <line x1="375" y1="265" x2="450" y2="265" stroke="rgba(0,200,255,0.4)" stroke-width="1.5" marker-end="url(#arr)"/>
+        <text x="388" y="258" font-family="JetBrains Mono" font-size="9" fill="rgba(0,200,255,0.4)">:8000</text>
+
+        <!-- ── Django Web ── -->
+        <rect x="452" y="200" width="175" height="130" rx="12" fill="#0e1a28" stroke="rgba(0,200,255,0.35)" stroke-width="1.5"/>
+        <text x="539" y="232" font-family="Syne" font-size="14" font-weight="700" fill="#e8f4ff" text-anchor="middle">🐍 Django App</text>
+        <text x="539" y="252" font-family="JetBrains Mono" font-size="10" fill="#6a90b0" text-anchor="middle">Gunicorn WSGI</text>
+        <text x="539" y="268" font-family="JetBrains Mono" font-size="9" fill="rgba(0,200,255,0.5)" text-anchor="middle">Blog · Auth · Admin</text>
+        <text x="539" y="284" font-family="JetBrains Mono" font-size="9" fill="rgba(0,200,255,0.4)" text-anchor="middle">:8000</text>
+        <circle cx="599" cy="204" r="5" fill="rgba(0,200,255,0.8)" filter="url(#glow)">
+          <animate attributeName="opacity" values="1;0.4;1" dur="2.3s" repeatCount="indefinite"/>
+        </circle>
+
+        <!-- arrow web → postgres -->
+        <line x1="539" y1="330" x2="539" y2="395" stroke="rgba(255,176,32,0.4)" stroke-width="1.5" marker-end="url(#arr)"/>
+        <text x="545" y="370" font-family="JetBrains Mono" font-size="9" fill="rgba(255,176,32,0.5)">psycopg2</text>
+
+        <!-- ── PostgreSQL ── -->
+        <rect x="450" y="398" width="175" height="90" rx="12" fill="#0e1a28" stroke="rgba(255,176,32,0.3)" stroke-width="1.5"/>
+        <text x="537" y="428" font-family="Syne" font-size="14" font-weight="700" fill="#e8f4ff" text-anchor="middle">🗄️ PostgreSQL</text>
+        <text x="537" y="447" font-family="JetBrains Mono" font-size="10" fill="#6a90b0" text-anchor="middle">v15 Database</text>
+        <text x="537" y="463" font-family="JetBrains Mono" font-size="9" fill="rgba(255,176,32,0.5)" text-anchor="middle">Users · Posts · Media</text>
+        <text x="537" y="478" font-family="JetBrains Mono" font-size="9" fill="rgba(255,176,32,0.4)" text-anchor="middle">tcp://db:5432</text>
+
+        <!-- ── Volumes ── -->
+        <rect x="238" y="415" width="165" height="55" rx="10" fill="#0e1a28" stroke="rgba(168,85,247,0.25)" stroke-width="1" stroke-dasharray="4,3"/>
+        <text x="320" y="438" font-family="Syne" font-size="12" font-weight="700" fill="#e8f4ff" text-anchor="middle">📂 Volumes</text>
+        <text x="320" y="456" font-family="JetBrains Mono" font-size="9" fill="#a855f7" text-anchor="middle">static/ · media/ · postgres_data/</text>
+
+        <!-- Nginx → Volumes -->
+        <line x1="297" y1="320" x2="297" y2="413" stroke="rgba(168,85,247,0.3)" stroke-width="1" stroke-dasharray="4,3" marker-end="url(#arr)"/>
+
+        <!-- ── Jenkins (external) ── -->
+        <rect x="640" y="30" width="185" height="80" rx="12" fill="#0e1a28" stroke="rgba(0,200,255,0.2)" stroke-width="1.5"/>
+        <text x="732" y="58" font-family="Syne" font-size="13" font-weight="700" fill="#e8f4ff" text-anchor="middle">🔧 Jenkins</text>
+        <text x="732" y="74" font-family="JetBrains Mono" font-size="10" fill="#6a90b0" text-anchor="middle">CI/CD Server</text>
+        <text x="732" y="90" font-family="JetBrains Mono" font-size="9" fill="rgba(0,200,255,0.4)" text-anchor="middle">Build · Test · Deploy</text>
+
+        <!-- Jenkins → EC2 -->
+        <path d="M685,110 Q660,140 620,200" stroke="rgba(0,200,255,0.3)" stroke-width="1.5" stroke-dasharray="6,4" fill="none" marker-end="url(#arr)"/>
+        <text x="640" y="168" font-family="JetBrains Mono" font-size="9" fill="rgba(0,200,255,0.4)" transform="rotate(-50,640,168)">SSH Deploy</text>
+
+        <!-- Animated data flow lines -->
+        <line x1="150" y1="265" x2="218" y2="265" stroke="var(--cyan)" stroke-width="2" stroke-dasharray="15,200">
+          <animate attributeName="stroke-dashoffset" values="0;-215" dur="2s" repeatCount="indefinite"/>
+        </line>
+        <line x1="375" y1="265" x2="450" y2="265" stroke="var(--cyan)" stroke-width="2" stroke-dasharray="15,200">
+          <animate attributeName="stroke-dashoffset" values="0;-215" dur="2s" repeatCount="indefinite" begin="0.4s"/>
+        </line>
+        <line x1="539" y1="330" x2="539" y2="395" stroke="#ffb020" stroke-width="2" stroke-dasharray="15,200">
+          <animate attributeName="stroke-dashoffset" values="0;-215" dur="2.5s" repeatCount="indefinite" begin="0.8s"/>
+        </line>
+
+        <!-- Labels -->
+        <text x="430" y="574" font-family="JetBrains Mono" font-size="10" fill="rgba(0,200,255,0.3)" text-anchor="middle">
+          ● Animated data flows  ● Nginx handles all ingress  ● Containers share Docker network
+        </text>
+
+      </svg>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════ JENKINS CI/CD ═══════ -->
+<section id="cicd">
+  <div class="sec-label">Automation Engine</div>
+  <h2 class="sec-title">Jenkins <span>Pipeline Stages</span></h2>
+  <p class="sec-desc">The Jenkinsfile defines 5 automated stages. Every push to <code style="background:var(--card);padding:2px 8px;border-radius:4px;font-family:var(--font-mono);font-size:13px;color:var(--cyan)">main</code> runs the full pipeline end-to-end — no human intervention required.</p>
+
+  <div class="jenkins-stages reveal">
+    <div class="jstage">
+      <div class="jstage-num done">📥</div>
+      <div class="jstage-title">Checkout</div>
+      <div class="jstage-desc">Pull latest code from GitHub main branch via webhook</div>
+    </div>
+    <div class="jstage">
+      <div class="jstage-num done">🏗️</div>
+      <div class="jstage-title">Docker Build</div>
+      <div class="jstage-desc">Build Django & Nginx images using Dockerfile</div>
+    </div>
+    <div class="jstage">
+      <div class="jstage-num done">🧪</div>
+      <div class="jstage-title">Run Tests</div>
+      <div class="jstage-desc">Execute Django unit tests inside the container</div>
+    </div>
+    <div class="jstage">
+      <div class="jstage-num done">📦</div>
+      <div class="jstage-title">Push Images</div>
+      <div class="jstage-desc">Update built Docker images to registry</div>
+    </div>
+    <div class="jstage">
+      <div class="jstage-num done">🚀</div>
+      <div class="jstage-title">Deploy</div>
+      <div class="jstage-desc">SSH to EC2, run docker-compose up -d</div>
+    </div>
+  </div>
+
+  <div class="benefits-grid reveal">
+    <div class="benefit-card">
+      <div class="benefit-icon">⚡</div>
+      <div class="benefit-title">Zero Manual Deploys</div>
+      <div class="benefit-desc">Every push to main deploys automatically. No SSH, no manual steps.</div>
+    </div>
+    <div class="benefit-card">
+      <div class="benefit-icon">🔄</div>
+      <div class="benefit-title">Faster Releases</div>
+      <div class="benefit-desc">Code-to-production in minutes. Continuous delivery at every commit.</div>
+    </div>
+    <div class="benefit-card">
+      <div class="benefit-icon">🛡️</div>
+      <div class="benefit-title">Reduced Human Error</div>
+      <div class="benefit-desc">Automated pipeline ensures consistent, repeatable deployments every time.</div>
+    </div>
+    <div class="benefit-card">
+      <div class="benefit-icon">📊</div>
+      <div class="benefit-title">Build Visibility</div>
+      <div class="benefit-desc">Full build logs, stage-by-stage results, and failure notifications via Jenkins dashboard.</div>
+    </div>
+  </div>
+
+  <div class="reveal" style="margin-top:40px">
+    <div class="code-block">
+      <div class="code-header">
+        <div class="code-dots"><span class="r"></span><span class="y"></span><span class="g"></span></div>
+        <div class="code-filename">Jenkinsfile</div>
+        <div style="font-family:var(--font-mono);font-size:10px;color:var(--green)">● Declarative Pipeline</div>
+      </div>
+      <div class="code-body"><pre><span class="kw">pipeline</span> {
+  <span class="kw">agent</span> <span class="kw">any</span>
+
+  <span class="kw">stages</span> {
+    <span class="kw">stage</span>(<span class="str">'Checkout'</span>) {
+      <span class="kw">steps</span> { <span class="fn">checkout</span> <span class="var">scm</span> }
+    }
+
+    <span class="kw">stage</span>(<span class="str">'Build Docker Images'</span>) {
+      <span class="kw">steps</span> {
+        <span class="fn">sh</span> <span class="str">'docker-compose build'</span>
+      }
+    }
+
+    <span class="kw">stage</span>(<span class="str">'Run Tests'</span>) {
+      <span class="kw">steps</span> {
+        <span class="fn">sh</span> <span class="str">'docker-compose run --rm web python manage.py test'</span>
+      }
+    }
+
+    <span class="kw">stage</span>(<span class="str">'Deploy to EC2'</span>) {
+      <span class="kw">steps</span> {
+        <span class="fn">sh</span> <span class="str">'''
+          docker-compose down
+          docker-compose up -d --build
+        '''</span>
+      }
+    }
+  }
+
+  <span class="kw">post</span> {
+    <span class="kw">success</span> { <span class="fn">echo</span> <span class="str">'✅ Deployed successfully!'</span> }
+    <span class="kw">failure</span> { <span class="fn">echo</span> <span class="str">'❌ Build failed — check logs'</span> }
+  }
+}</pre></div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════ DOCKER ═══════ -->
+<section id="docker-section">
+  <div class="sec-label">Containerization</div>
+  <h2 class="sec-title">Docker <span>Services</span></h2>
+  <p class="sec-desc">Three services defined in <code style="background:var(--card);padding:2px 8px;border-radius:4px;font-family:var(--font-mono);font-size:13px;color:var(--cyan)">docker-compose.yml</code> — isolated, networked, and orchestrated with shared volumes and environment config.</p>
+
+  <div class="docker-grid reveal">
+    <div>
+      <div class="docker-compose-vis">
+        <div class="compose-title">docker-compose.yml — Services</div>
+
+        <div class="service-block">
+          <div class="svc-header">
+            <div class="svc-icon">🌐</div>
+            <div class="svc-name">nginx</div>
+            <div class="svc-tag">reverse proxy</div>
+          </div>
+          <div class="svc-props">
+            <div class="svc-prop"><span class="key">image:</span> nginx:alpine</div>
+            <div class="svc-prop"><span class="key">ports:</span> "80:80", "443:443"</div>
+            <div class="svc-prop"><span class="key">volumes:</span> ./nginx.conf, static/, media/</div>
+            <div class="svc-prop"><span class="key">depends_on:</span> web</div>
+          </div>
+        </div>
+
+        <div class="service-block">
+          <div class="svc-header">
+            <div class="svc-icon">🐍</div>
+            <div class="svc-name">web</div>
+            <div class="svc-tag">django app</div>
+          </div>
+          <div class="svc-props">
+            <div class="svc-prop"><span class="key">build:</span> . (Dockerfile)</div>
+            <div class="svc-prop"><span class="key">command:</span> gunicorn wsgi:application</div>
+            <div class="svc-prop"><span class="key">ports:</span> "8000:8000"</div>
+            <div class="svc-prop"><span class="key">env_file:</span> .env</div>
+            <div class="svc-prop"><span class="key">depends_on:</span> db</div>
+          </div>
+        </div>
+
+        <div class="service-block db">
+          <div class="svc-header">
+            <div class="svc-icon">🗄️</div>
+            <div class="svc-name">db</div>
+            <div class="svc-tag">postgresql</div>
+          </div>
+          <div class="svc-props">
+            <div class="svc-prop"><span class="key">image:</span> postgres:15-alpine</div>
+            <div class="svc-prop"><span class="key">ports:</span> "5432:5432"</div>
+            <div class="svc-prop"><span class="key">volumes:</span> postgres_data:/var/lib/postgresql</div>
+            <div class="svc-prop"><span class="key">env_file:</span> .env (DB credentials)</div>
+          </div>
+        </div>
+
+        <div class="compose-network">
+          <div class="net-title">🔗 Shared Docker Network</div>
+          <div class="net-services">
+            <div class="net-svc">nginx</div>
+            <div class="net-svc">web</div>
+            <div class="net-svc">db</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div>
+      <div class="code-block" style="margin-bottom:20px">
+        <div class="code-header">
+          <div class="code-dots"><span class="r"></span><span class="y"></span><span class="g"></span></div>
+          <div class="code-filename">Dockerfile</div>
+        </div>
+        <div class="code-body"><pre><span class="cmt"># Multi-stage Python build</span>
+<span class="kw">FROM</span> <span class="str">python:3.11-slim</span>
+
+<span class="kw">WORKDIR</span> <span class="var">/app</span>
+<span class="kw">ENV</span> <span class="var">PYTHONDONTWRITEBYTECODE</span>=<span class="num">1</span>
+<span class="kw">ENV</span> <span class="var">PYTHONUNBUFFERED</span>=<span class="num">1</span>
+
+<span class="cmt"># System dependencies</span>
+<span class="kw">RUN</span> <span class="fn">apt-get update</span> && <span class="fn">apt-get install</span> \
+    <span class="str">libpq-dev gcc</span> --no-install-recommends
+
+<span class="cmt"># Python dependencies</span>
+<span class="kw">COPY</span> <span class="var">requirements.txt</span> .
+<span class="kw">RUN</span> <span class="fn">pip install</span> --no-cache-dir -r requirements.txt
+
+<span class="kw">COPY</span> . .
+
+<span class="cmt"># Collect static files</span>
+<span class="kw">RUN</span> <span class="fn">python manage.py collectstatic</span> --noinput
+
+<span class="kw">EXPOSE</span> <span class="num">8000</span>
+<span class="kw">ENTRYPOINT</span> [<span class="str">"./entrypoint.sh"</span>]</pre></div>
+      </div>
+
+      <div class="code-block">
+        <div class="code-header">
+          <div class="code-dots"><span class="r"></span><span class="y"></span><span class="g"></span></div>
+          <div class="code-filename">nginx.conf</div>
+        </div>
+        <div class="code-body"><pre><span class="kw">upstream</span> <span class="var">django</span> {
+    <span class="kw">server</span> <span class="str">web:8000</span>;
+}
+
+<span class="kw">server</span> {
+    <span class="kw">listen</span> <span class="num">80</span>;
+
+    <span class="kw">location</span> <span class="str">/static/</span> {
+        <span class="kw">alias</span> <span class="var">/vol/web/static/</span>;
+    }
+
+    <span class="kw">location</span> <span class="str">/media/</span> {
+        <span class="kw">alias</span> <span class="var">/vol/web/media/</span>;
+    }
+
+    <span class="kw">location</span> <span class="str">/</span> {
+        <span class="fn">proxy_pass</span> http://<span class="var">django</span>;
+        <span class="fn">proxy_set_header</span> Host $host;
+        <span class="fn">proxy_set_header</span> X-Real-IP $remote_addr;
+    }
+}</pre></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════ AWS ═══════ -->
+<section id="aws">
+  <div class="sec-label">Cloud Infrastructure</div>
+  <h2 class="sec-title">AWS <span>EC2 Setup</span></h2>
+  <p class="sec-desc">Ubuntu EC2 instance hosts the entire containerized stack. Security groups open only the required ports. Jenkins deploys via SSH using key-based authentication.</p>
+
+  <div class="aws-grid reveal">
+    <div class="ec2-vis">
+      <div class="ec2-label">EC2 Ubuntu Instance</div>
+      <div class="container-stack">
+        <div class="ct" style="border-color:rgba(0,255,157,.2)">
+          <div class="ct-icon">🌐</div>
+          <div class="ct-info">
+            <div class="ct-name">Nginx Container</div>
+            <div class="ct-port">nginx:alpine — :80, :443 → Reverse Proxy</div>
+          </div>
+        </div>
+        <div class="ct" style="border-color:rgba(0,200,255,.2)">
+          <div class="ct-icon">🐍</div>
+          <div class="ct-info">
+            <div class="ct-name">Web (Django/Gunicorn)</div>
+            <div class="ct-port">python:3.11-slim — :8000 → Application Server</div>
+          </div>
+        </div>
+        <div class="ct" style="border-color:rgba(255,176,32,.2)">
+          <div class="ct-icon">🗄️</div>
+          <div class="ct-info">
+            <div class="ct-name">PostgreSQL Database</div>
+            <div class="ct-port">postgres:15-alpine — :5432 → Persistent storage</div>
+          </div>
+        </div>
+      </div>
+      <div class="ec2-net">
+        <div class="ec2-net-title">Security Group — Open Ports</div>
+        <div class="port-list">
+          <div class="port-badge open">SSH :22</div>
+          <div class="port-badge open">HTTP :80</div>
+          <div class="port-badge open">HTTPS :443</div>
+          <div class="port-badge">DB :5432 (internal)</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="infra-details">
+      <div class="infra-item">
+        <div class="infra-item-head">
+          <div class="infra-item-icon">🖥️</div>
+          <div class="infra-item-title">EC2 Instance (Ubuntu)</div>
+        </div>
+        <div class="infra-item-desc">Ubuntu Linux as the base OS. Docker and Docker Compose installed. Jenkins deploys to this instance via SSH. All containers run here as a single deployment unit.</div>
+      </div>
+      <div class="infra-item">
+        <div class="infra-item-head">
+          <div class="infra-item-icon">🔑</div>
+          <div class="infra-item-title">SSH Key Auth</div>
+        </div>
+        <div class="infra-item-desc">Jenkins uses SSH key-based authentication to connect to EC2. No passwords. Private key stored securely in Jenkins credential manager. EC2 public key in authorized_keys.</div>
+      </div>
+      <div class="infra-item">
+        <div class="infra-item-head">
+          <div class="infra-item-icon">🔒</div>
+          <div class="infra-item-title">Security Groups</div>
+        </div>
+        <div class="infra-item-desc">Minimal port exposure — only SSH (22), HTTP (80), and HTTPS (443) open to the world. Database port 5432 restricted to internal Docker network only.</div>
+      </div>
+      <div class="infra-item">
+        <div class="infra-item-head">
+          <div class="infra-item-icon">💾</div>
+          <div class="infra-item-title">EBS Storage + Volumes</div>
+        </div>
+        <div class="infra-item-desc">Docker named volumes persist data between container restarts — postgres_data for the DB, /vol/web/static and /vol/web/media for Django assets. EBS backs the instance.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════ DEPLOYMENT GUIDE ═══════ -->
+<section id="deploy">
+  <div class="sec-label">Step-by-Step Guide</div>
+  <h2 class="sec-title">How to <span>Deploy</span></h2>
+  <p class="sec-desc">Full deployment walkthrough — from cloning the repo to a live production app on AWS EC2 in 6 steps.</p>
+
+  <div class="deploy-steps reveal">
+
+    <div class="dstep" data-num="01">
+      <div class="dstep-num">1</div>
+      <div class="dstep-title">Clone & Configure</div>
+      <div class="dstep-code"><div class="comment"># Clone the repository</div>
+git clone https://github.com/ak-127/sai-prj1.git
+cd sai-prj1
+
+<div class="comment"># Copy environment template</div>
+cp .env.example .env</div>
+      <div class="dstep-desc">Clone the repo and copy the environment file. Edit <code>.env</code> with your DB credentials, Django SECRET_KEY, and ALLOWED_HOSTS.</div>
+    </div>
+
+    <div class="dstep" data-num="02">
+      <div class="dstep-num">2</div>
+      <div class="dstep-title">Provision EC2 Instance</div>
+      <div class="dstep-code"><div class="comment"># On AWS Console:</div>
+Launch Ubuntu 22.04 EC2 (t2.micro+)
+Configure Security Group:
+  - Port 22  (SSH)
+  - Port 80  (HTTP)
+  - Port 443 (HTTPS)
+Assign/note Elastic IP</div>
+      <div class="dstep-desc">Create an Ubuntu EC2 instance. Set up security group rules for SSH, HTTP, and HTTPS. Download your .pem key pair for SSH access.</div>
+    </div>
+
+    <div class="dstep" data-num="03">
+      <div class="dstep-num">3</div>
+      <div class="dstep-title">Install Docker on EC2</div>
+      <div class="dstep-code"><div class="comment"># SSH into your EC2</div>
+ssh -i your-key.pem ubuntu@EC2_IP
+
+<div class="comment"># Run the install script</div>
+chmod +x install.sh
+./install.sh
+
+<div class="comment"># Verify</div>
+docker --version
+docker compose version</div>
+      <div class="dstep-desc">SSH into the EC2 instance and run the included <code>install.sh</code> script which installs Docker, Docker Compose, and all required system dependencies.</div>
+    </div>
+
+    <div class="dstep" data-num="04">
+      <div class="dstep-num">4</div>
+      <div class="dstep-title">Setup Jenkins Pipeline</div>
+      <div class="dstep-code"><div class="comment"># In Jenkins dashboard:</div>
+New Item → Pipeline
+Configure GitHub repo URL
+Add webhook in GitHub:
+  Payload URL: http://JENKINS_URL/
+  Content type: application/json
+  Event: Push
+
+<div class="comment"># Add EC2 SSH credentials</div>
+Manage Jenkins → Credentials
+Add: SSH Username with private key</div>
+      <div class="dstep-desc">Create a new Pipeline job in Jenkins. Configure the GitHub webhook so every push to <code>main</code> triggers the Jenkinsfile pipeline automatically.</div>
+    </div>
+
+    <div class="dstep" data-num="05">
+      <div class="dstep-num">5</div>
+      <div class="dstep-title">Build & Launch</div>
+      <div class="dstep-code"><div class="comment"># Manual first deploy on EC2:</div>
+git clone https://github.com/ak-127/sai-prj1.git
+cd sai-prj1
+cp .env.example .env
+nano .env  # Fill in secrets
+
+docker compose up -d --build
+
+<div class="comment"># Run migrations</div>
+docker compose exec web \
+  python manage.py migrate
+
+<div class="comment"># Create superuser</div>
+docker compose exec web \
+  python manage.py createsuperuser</div>
+      <div class="dstep-desc">On first deploy, run <code>docker compose up -d --build</code> manually on EC2. After this, all subsequent deploys happen automatically via Jenkins on every git push.</div>
+    </div>
+
+    <div class="dstep" data-num="06">
+      <div class="dstep-num">6</div>
+      <div class="dstep-title">Verify & Monitor</div>
+      <div class="dstep-code"><div class="comment"># Check container health</div>
+docker compose ps
+docker compose logs -f web
+
+<div class="comment"># Check Nginx is running</div>
+curl http://your-ec2-ip
+
+<div class="comment"># Access Django admin</div>
+http://your-ec2-ip/admin/
+
+<div class="comment"># Monitor logs</div>
+docker compose logs --tail=50 -f</div>
+      <div class="dstep-desc">Verify all containers are running with <code>docker compose ps</code>. Access the app at your EC2 IP on port 80. Admin panel at <code>/admin/</code>. Watch live logs with the logs command.</div>
+    </div>
+
+  </div>
+
+  <!-- ENV Config -->
+  <div class="reveal" style="margin-top:40px">
+    <div class="code-block">
+      <div class="code-header">
+        <div class="code-dots"><span class="r"></span><span class="y"></span><span class="g"></span></div>
+        <div class="code-filename">.env — Environment Configuration</div>
+        <div style="font-family:var(--font-mono);font-size:10px;color:var(--red)">⚠ Never commit this file</div>
+      </div>
+      <div class="code-body"><pre><span class="cmt"># Django Configuration</span>
+<span class="var">SECRET_KEY</span>=<span class="str">your-super-secret-django-key-here</span>
+<span class="var">DEBUG</span>=<span class="num">0</span>
+<span class="var">ALLOWED_HOSTS</span>=<span class="str">your-ec2-ip,your-domain.com</span>
+
+<span class="cmt"># Database Configuration</span>
+<span class="var">DB_NAME</span>=<span class="str">saikrupa_db</span>
+<span class="var">DB_USER</span>=<span class="str">postgres_user</span>
+<span class="var">DB_PASSWORD</span>=<span class="str">strong-password-here</span>
+<span class="var">DB_HOST</span>=<span class="str">db</span>
+<span class="var">DB_PORT</span>=<span class="num">5432</span>
+
+<span class="cmt"># Django static / media</span>
+<span class="var">STATIC_URL</span>=<span class="str">/static/</span>
+<span class="var">MEDIA_URL</span>=<span class="str">/media/</span></pre></div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════ TECH STACK ═══════ -->
+<section id="stack">
+  <div class="sec-label">What Powers This</div>
+  <h2 class="sec-title">Full Tech <span>Stack</span></h2>
+
+  <div class="stack-table reveal">
+    <div class="stack-row header">
+      <div class="stack-cell header">Category</div>
+      <div class="stack-cell header">Technology</div>
+      <div class="stack-cell header">Role in Project</div>
+    </div>
+    <div class="stack-row">
+      <div class="stack-cell cat">🐍 Backend</div>
+      <div class="stack-cell tech">Django 5.0.6 + Gunicorn</div>
+      <div class="stack-cell desc">Web framework + WSGI application server. Handles routing, auth, admin, blog logic.</div>
+    </div>
+    <div class="stack-row">
+      <div class="stack-cell cat">🗄️ Database</div>
+      <div class="stack-cell tech">PostgreSQL 15 + Psycopg2</div>
+      <div class="stack-cell desc">Relational DB for all persistent data. ACID compliant with persistent Docker volume.</div>
+    </div>
+    <div class="stack-row">
+      <div class="stack-cell cat">🌐 Proxy</div>
+      <div class="stack-cell tech">Nginx (Alpine)</div>
+      <div class="stack-cell desc">Reverse proxy, SSL termination, static file serving, Gzip compression.</div>
+    </div>
+    <div class="stack-row">
+      <div class="stack-cell cat">🐳 Containers</div>
+      <div class="stack-cell tech">Docker + Docker Compose</div>
+      <div class="stack-cell desc">Containerizes all 3 services. Compose manages networking, volumes, dependencies.</div>
+    </div>
+    <div class="stack-row">
+      <div class="stack-cell cat">🔧 CI/CD</div>
+      <div class="stack-cell tech">Jenkins (Declarative Pipeline)</div>
+      <div class="stack-cell desc">Automated build, test, and deploy pipeline. Triggered by GitHub webhooks on every push.</div>
+    </div>
+    <div class="stack-row">
+      <div class="stack-cell cat">☁️ Cloud</div>
+      <div class="stack-cell tech">AWS EC2 (Ubuntu)</div>
+      <div class="stack-cell desc">Cloud compute instance hosting the full Docker stack. EBS for persistent block storage.</div>
+    </div>
+    <div class="stack-row">
+      <div class="stack-cell cat">🔐 Auth</div>
+      <div class="stack-cell tech">Django Auth + .env</div>
+      <div class="stack-cell desc">Built-in Django authentication. Secrets managed via .env — not hardcoded, not committed.</div>
+    </div>
+    <div class="stack-row">
+      <div class="stack-cell cat">📦 VCS</div>
+      <div class="stack-cell tech">Git + GitHub</div>
+      <div class="stack-cell desc">Version control + remote repo. GitHub webhooks trigger Jenkins pipeline on every commit.</div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════ SECURITY ═══════ -->
+<section id="security">
+  <div class="sec-label">Best Practices</div>
+  <h2 class="sec-title">Security <span>Architecture</span></h2>
+
+  <div class="security-grid reveal">
+    <div class="sec-card">
+      <div class="sec-icon">🔐</div>
+      <div class="sec-title">Secrets via .env</div>
+      <div class="sec-desc">All sensitive config — DB passwords, SECRET_KEY, API keys — stored in .env file, excluded from git via .gitignore. Never hardcoded in source.</div>
+    </div>
+    <div class="sec-card">
+      <div class="sec-icon">🔑</div>
+      <div class="sec-title">SSH Key Auth</div>
+      <div class="sec-desc">EC2 access uses key-based SSH authentication only. Password auth disabled. Jenkins stores the private key in its encrypted credential store.</div>
+    </div>
+    <div class="sec-card">
+      <div class="sec-icon">🛡️</div>
+      <div class="sec-title">Minimal Port Exposure</div>
+      <div class="sec-desc">AWS Security Group exposes only ports 22, 80, 443. PostgreSQL port 5432 is internal-only — never accessible from outside the Docker network.</div>
+    </div>
+    <div class="sec-card">
+      <div class="sec-icon">🌐</div>
+      <div class="sec-title">Nginx as Proxy</div>
+      <div class="sec-desc">Nginx sits in front of Django — the app server is never directly exposed. Nginx handles SSL termination, headers, and rate limiting.</div>
+    </div>
+    <div class="sec-card">
+      <div class="sec-icon">📦</div>
+      <div class="sec-title">Container Isolation</div>
+      <div class="sec-desc">Each service runs in its own isolated container with separate filesystem. Breach of one container doesn't automatically compromise others.</div>
+    </div>
+    <div class="sec-card">
+      <div class="sec-icon">🔒</div>
+      <div class="sec-title">Jenkins Credentials</div>
+      <div class="sec-desc">SSH keys and API tokens stored in Jenkins Credential Manager — encrypted at rest. Never logged in build output or stored in plain text config.</div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════ ROADMAP ═══════ -->
+<section id="roadmap">
+  <div class="sec-label">What's Next</div>
+  <h2 class="sec-title">Future <span>Improvements</span></h2>
+
+  <div class="roadmap-list reveal">
+    <div class="rm-item">
+      <div class="rm-badge soon">☸️</div>
+      <div>
+        <div class="rm-title">Kubernetes (EKS) Migration</div>
+        <div class="rm-desc">Move from Docker Compose to Kubernetes on AWS EKS for auto-scaling, self-healing, and rolling deployments.</div>
+        <div class="rm-tag soon">In Progress</div>
+      </div>
+    </div>
+    <div class="rm-item">
+      <div class="rm-badge planned">🏗️</div>
+      <div>
+        <div class="rm-title">Terraform IaC</div>
+        <div class="rm-desc">Provision the entire AWS infrastructure — EC2, VPC, SGs, EBS — via Terraform for reproducible, version-controlled infrastructure.</div>
+        <div class="rm-tag planned">Planned</div>
+      </div>
+    </div>
+    <div class="rm-item">
+      <div class="rm-badge planned">📊</div>
+      <div>
+        <div class="rm-title">Prometheus + Grafana Monitoring</div>
+        <div class="rm-desc">Add full observability stack — container metrics, Django app metrics, PostgreSQL performance dashboards in Grafana.</div>
+        <div class="rm-tag planned">Planned</div>
+      </div>
+    </div>
+    <div class="rm-item">
+      <div class="rm-badge soon">🔐</div>
+      <div>
+        <div class="rm-title">HTTPS with Let's Encrypt</div>
+        <div class="rm-desc">Add free SSL certificates via Certbot + Nginx. Auto-renewal configured. Force HTTP → HTTPS redirects for production security.</div>
+        <div class="rm-tag soon">In Progress</div>
+      </div>
+    </div>
+    <div class="rm-item">
+      <div class="rm-badge future">🔵</div>
+      <div>
+        <div class="rm-title">Blue-Green Deployment</div>
+        <div class="rm-desc">Zero-downtime deployments using blue-green strategy. Switch traffic between environments with Nginx upstream config changes.</div>
+        <div class="rm-tag future">Future</div>
+      </div>
+    </div>
+    <div class="rm-item">
+      <div class="rm-badge future">🚨</div>
+      <div>
+        <div class="rm-title">Centralized Log Management</div>
+        <div class="rm-desc">Ship all container logs to ELK Stack (Elasticsearch + Logstash + Kibana) for centralized log analysis and alerting.</div>
+        <div class="rm-tag future">Future</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div>Built by <span>Akash Kamble</span> — DevOps Engineer</div>
+  <div class="footer-links">
+    <a href="https://github.com/ak-127/sai-prj1" target="_blank">GitHub Repo</a>
+    <a href="https://akashkamble.in" target="_blank">Portfolio</a>
+    <a href="mailto:contact@akashkamble.in">Contact</a>
+  </div>
+  <div>Django · Docker · Jenkins · <span>AWS EC2</span></div>
+</footer>
+
+<script>
+// Cursor
+const cur = document.getElementById('cur'), cur2 = document.getElementById('cur2');
+let mx=0,my=0,rx=0,ry=0;
+document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY});
+(function tick(){
+  cur.style.transform=`translate(${mx-4}px,${my-4}px)`;
+  rx+=(mx-rx)*.1; ry+=(my-ry)*.1;
+  cur2.style.transform=`translate(${rx-16}px,${ry-16}px)`;
+  requestAnimationFrame(tick);
+})();
+document.querySelectorAll('a,button,.pnode-box,.dstep,.sec-card,.service-block,.benefit-card,.rm-item,.infra-item,.testi-card').forEach(el=>{
+  el.addEventListener('mouseenter',()=>cur2.classList.add('h'));
+  el.addEventListener('mouseleave',()=>cur2.classList.remove('h'));
+});
+
+// Reveal
+const obs = new IntersectionObserver(e=>{e.forEach(x=>{if(x.isIntersecting)x.target.classList.add('on')})},{threshold:.1});
+document.querySelectorAll('.reveal').forEach(el=>obs.observe(el));
+
+// Nav active
+const navLinks = document.querySelectorAll('.nav-links a');
+const sections = document.querySelectorAll('section');
+const sObs = new IntersectionObserver(e=>{
+  e.forEach(x=>{
+    if(x.isIntersecting){
+      navLinks.forEach(l=>l.style.color='');
+      const l = document.querySelector(`.nav-links a[href="#${x.target.id}"]`);
+      if(l) l.style.color='var(--cyan)';
+    }
+  });
+},{threshold:.4});
+sections.forEach(s=>sObs.observe(s));
+
+// Pipeline node hover effect (add click to animate)
+document.querySelectorAll('.pnode-box').forEach(n=>{
+  n.addEventListener('click',()=>{
+    n.style.transform='translateY(-8px) scale(1.05)';
+    setTimeout(()=>n.style.transform='',400);
+  });
+});
+
+// Animate jenkins stages on scroll
+const jStages = document.querySelectorAll('.jstage-num');
+const jObs = new IntersectionObserver(e=>{
+  if(e[0].isIntersecting){
+    jStages.forEach((s,i)=>setTimeout(()=>{
+      s.style.borderColor='var(--green)';
+      s.style.boxShadow='0 0 20px rgba(0,255,157,.3)';
+    },i*400));
+  }
+},{threshold:.5});
+const jSection = document.querySelector('.jenkins-stages');
+if(jSection) jObs.observe(jSection);
+</script>
+</body>
+</html>
