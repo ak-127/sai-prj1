@@ -37,4 +37,8 @@ Thumbs.db
 
 # Tests & docs (optional)
 tests/
-docs/
+doc/
+install.sh
+Jenkinsfile
+nginx.conf
+README.md

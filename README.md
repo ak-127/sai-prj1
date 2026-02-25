@@ -1,5 +1,11 @@
 # 🚀 Django DevOps Project – CI/CD Pipeline on AWS
 
+![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)
+![Django](https://img.shields.io/badge/Django-Web_App-092E20?style=for-the-badge&logo=django&logoColor=white)
+![Docker](https://img.shields.io/badge/Docker-Containerized-2496ED?style=for-the-badge&logo=docker&logoColor=white)
+![GitHub Actions](https://img.shields.io/badge/GitHub_Actions-CI/CD-2088FF?style=for-the-badge&logo=github-actions&logoColor=white)
+
+
 ## 📌 Project Overview
 
 This project demonstrates a **production-ready DevOps workflow** for a Django web application using **Docker, Jenkins CI/CD, and AWS EC2**.
@@ -267,7 +273,13 @@ http://localhost:8000
     │ Port 80     │
     └─────────────┘
 ```
-👉 Please read the full setup guide here:  
-[View Installation Instructions](/doc/Installation.md)
 
+📖 **Full deployment setup:** See [DEPLOYMENT.md](./DEPLOYMENT.md)
 
+---
+
+<div align="center">
+
+*Built with a focus on automation, reliability, and production-grade DevOps practices.*
+
+</div>
